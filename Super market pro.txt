@@ -1,0 +1,77 @@
+CREATE DATABASE IF NOT EXISTS `Super market`;
+SHOW DATABASES;
+USE `Super market`;
+
+CREATE TABLE IF NOT EXISTS Customer(
+	custId VARCHAR(6) NOT NULL,
+	custTitle VARCHAR(5) NOT NULL,
+	custName VARCHAR(30) NOT NULL DEFAULT 'Unknown',
+	custAddress VARCHAR(30) NOT NULL,
+	city VARCHAR(20) NOT NULL,
+	province VARCHAR(20) NOT NULL,
+	postalCode VARCHAR(9) NOT NULL,
+	CONSTRAINT PRIMARY KEY (custId)
+);
+
+SHOW TABLES;
+DESC Customer;
+
+INSERT INTO Customer VALUES
+('C001','Mr','Amayuru','Kalutara','Matugama','Western','12100'),
+('C002','Mr','Gota','Colombo','Mount lavi','Western','10370');
+
+SELECT * FROM Customer;
+
+CREATE TABLE IF NOT EXISTS `Order`(
+	orderId VARCHAR(6),
+	orderDate DATE,
+	custId VARCHAR(6),
+	CONSTRAINT PRIMARY KEY (orderId),
+	CONSTRAINT FOREIGN KEY (custId) REFERENCES Customer (custId)
+	ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+SHOW TABLES;
+DESC `Order`;
+
+INSERT INTO `Order` VALUES
+('O-001','2021-08-18','C001'),
+('O-002','2021-08-18','C002');
+
+SELECT * FROM `Order`;
+
+CREATE TABLE IF NOT EXISTS Item(
+	itemCode VARCHAR(6),
+	Description VARCHAR(50),
+	packSize VARCHAR(20),
+	unitPrice DECIMAL(6,2) DEFAULT 0.00,
+	qtyOnHand INT(5),
+	CONSTRAINT PRIMARY KEY (itemCode)
+);
+
+SHOW TABLES;
+DESC Item;
+
+INSERT INTO Item 
+VALUES('I-001','Battery','50g',35.00,80);
+
+SELECT * FROM Item;
+
+CREATE TABLE IF NOT EXISTS `Order Detail`(
+	orderId VARCHAR(6),
+	itemCode VARCHAR(6),
+	orderQTY INT(11),
+	discount DECIMAL(6,2) DEFAULT 0.0,
+	CONSTRAINT PRIMARY KEY(orderId,itemCode),
+	CONSTRAINT FOREIGN KEY (orderId) REFERENCES `Order` (orderId),
+	CONSTRAINT FOREIGN KEY (itemCode) REFERENCES Item (itemCode)
+	ON DELETE CASCADE ON UPDATE CASCADE	
+);
+
+SHOW TABLES;
+DESC `Order Detail`;
+
+INSERT INTO `Order Detail` VALUES
+('O-001','I-001','1',0.00);
+
+SELECT * FROM `Order Detail`;
